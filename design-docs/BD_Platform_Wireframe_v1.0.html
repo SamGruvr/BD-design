@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD Capture & Intelligence Platform — Wireframe v1.0</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #0d1b2e; color: #e0e8f4; min-height: 100vh; }
+
+  /* Layout */
+  .app-shell { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: 220px; min-width: 220px; background: #0a1628; border-right: 1px solid #1a3a5c; display: flex; flex-direction: column; padding: 0; }
+  .main { flex: 1; overflow-y: auto; background: #0d1b2e; }
+
+  /* Sidebar */
+  .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid #1a3a5c; }
+  .sidebar-logo .logo-text { font-size: 13px; font-weight: 700; color: #60a5fa; letter-spacing: 0.5px; line-height: 1.3; }
+  .sidebar-logo .logo-sub { font-size: 10px; color: #4a6080; margin-top: 2px; }
+  .sidebar-nav { flex: 1; padding: 12px 0; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; font-size: 13px; color: #8aaccc; transition: all 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: #111f38; color: #c0d8f0; }
+  .nav-item.active { background: #112240; color: #60a5fa; border-left-color: #60a5fa; font-weight: 600; }
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+  .nav-badge { margin-left: auto; background: #cc3030; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid #1a3a5c; font-size: 11px; color: #4a6080; }
+  .sidebar-user { display: flex; align-items: center; gap: 8px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #1a4a8a; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #60a5fa; }
+
+  /* Top bar */
+  .topbar { background: #0a1628; border-bottom: 1px solid #1a3a5c; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar-title { font-size: 16px; font-weight: 600; color: #c0d8f0; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* Buttons */
+  .btn { padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-primary { background: #1a5cba; color: #fff; }
+  .btn-primary:hover { background: #2068cc; }
+  .btn-outline { background: transparent; color: #60a5fa; border: 1px solid #2a5a9a; }
+  .btn-outline:hover { background: #112240; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+  /* Content */
+  .content { padding: 20px 24px; }
+
+  /* KPI cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .kpi-card { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px 16px; }
+  .kpi-label { font-size: 11px; color: #6a8aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .kpi-value { font-size: 26px; font-weight: 700; color: #60a5fa; }
+  .kpi-sub { font-size: 11px; color: #4a6a8a; margin-top: 3px; }
+
+  /* Deal grid */
+  .deals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .deal-card { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
+  .deal-card:hover { border-color: #2a6aaa; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+  .deal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .deal-card.blue::before { background: #2a7fff; }
+  .deal-card.green::before { background: #22c55e; }
+  .deal-card.white::before { background: #94a3b8; }
+
+  .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .deal-name { font-size: 13px; font-weight: 600; color: #c0d8f0; line-height: 1.3; flex: 1; }
+  .deal-badges { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+  .badge-blue { background: #1a4a8a; color: #60a5fa; }
+  .badge-green { background: #14532d; color: #4ade80; }
+  .badge-white { background: #1e293b; color: #94a3b8; }
+  .badge-red-team { background: #7f1d1d; color: #fca5a5; }
+  .badge-blue-team { background: #1e3a5f; color: #93c5fd; }
+  .badge-white-team { background: #1e293b; color: #e2e8f0; }
+
+  .deal-agency { font-size: 11px; color: #6a8aaa; margin-bottom: 10px; }
+  .deal-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .deal-meta-item { font-size: 11px; }
+  .deal-meta-label { color: #4a6a8a; margin-bottom: 1px; }
+  .deal-meta-value { color: #a0c0e0; font-weight: 500; }
+  .deal-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #1a3a5c; }
+  .deal-people { font-size: 10px; color: #5a7a9a; }
+  .deal-counts { display: flex; gap: 8px; }
+  .count-badge { display: flex; align-items: center; gap: 3px; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+  .count-risk { background: #2d1515; color: #f87171; }
+  .count-action { background: #1a2d1a; color: #86efac; }
+
+  /* Section filters */
+  .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .filter-row { display: flex; gap: 8px; }
+  .filter-select { background: #0f2342; border: 1px solid #1a3a5c; color: #8aaccc; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .search-input { background: #0f2342; border: 1px solid #1a3a5c; color: #c0d8f0; padding: 6px 12px; border-radius: 6px; font-size: 12px; width: 180px; }
+  .search-input::placeholder { color: #3a5a7a; }
+
+  /* Deal detail */
+  .detail-header { background: #0a1628; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #1a3a5c; }
+  .detail-title { font-size: 20px; font-weight: 700; color: #c0d8f0; margin-bottom: 4px; }
+  .detail-sub { font-size: 13px; color: #6a8aaa; margin-bottom: 14px; }
+  .detail-meta-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .detail-meta-box { }
+  .detail-meta-label { font-size: 10px; color: #4a6a8a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+  .detail-meta-value { font-size: 13px; font-weight: 600; color: #a0c0e0; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid #1a3a5c; margin-bottom: 16px; }
+  .tab { padding: 10px 16px; font-size: 12px; color: #6a8aaa; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .tab:hover { color: #a0c0e0; }
+  .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; font-weight: 600; }
+
+  /* Tab content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  .info-box { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px; }
+  .info-box-title { font-size: 11px; font-weight: 600; color: #4a6a8a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+  .info-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #112030; font-size: 12px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #6a8aaa; }
+  .info-value { color: #a0c0e0; font-weight: 500; text-align: right; }
+  .full-width { grid-column: 1 / -1; }
+  .text-area-box { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px; }
+  .text-content { font-size: 12px; color: #8aaccc; line-height: 1.6; }
+
+  /* Tables */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { background: #0a1628; color: #6a8aaa; padding: 8px 12px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid #1a3a5c; }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid #0f2342; color: #a0c0e0; }
+  .data-table tr:hover td { background: #111f38; }
+
+  /* Action cards */
+  .action-list { display: flex; flex-direction: column; gap: 10px; }
+  .action-card { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px; display: flex; align-items: flex-start; gap: 12px; }
+  .action-card.overdue { border-left: 3px solid #ef4444; }
+  .action-priority { width: 6px; min-width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; }
+  .priority-high { background: #ef4444; }
+  .priority-medium { background: #f59e0b; }
+  .priority-low { background: #22c55e; }
+  .action-body { flex: 1; }
+  .action-title { font-size: 13px; font-weight: 600; color: #c0d8f0; margin-bottom: 4px; }
+  .action-meta { display: flex; gap: 12px; font-size: 11px; color: #5a7a9a; }
+  .action-status { margin-left: auto; }
+
+  /* Risk cards */
+  .risk-list { display: flex; flex-direction: column; gap: 10px; }
+  .risk-card { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px; }
+  .risk-card.severity-red { border-left: 3px solid #ef4444; }
+  .risk-card.severity-yellow { border-left: 3px solid #f59e0b; }
+  .risk-card.severity-green { border-left: 3px solid #22c55e; }
+  .risk-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .risk-title { font-size: 13px; font-weight: 600; color: #c0d8f0; }
+  .risk-context { font-size: 12px; color: #6a8aaa; margin-bottom: 8px; line-height: 1.5; }
+  .risk-mitigation { font-size: 12px; color: #8aaccc; line-height: 1.5; }
+  .risk-mitigation-label { font-size: 10px; font-weight: 600; color: #4a6a8a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+
+  /* Severity badges */
+  .sev-red { background: #2d1515; color: #f87171; }
+  .sev-yellow { background: #2d2010; color: #fbbf24; }
+  .sev-green { background: #0f2d1a; color: #4ade80; }
+  .status-open { background: #1a2a4a; color: #60a5fa; }
+  .status-done { background: #1a2d1a; color: #4ade80; }
+  .status-mitigating { background: #2d2010; color: #fbbf24; }
+
+  /* Screen toggle */
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; height: 100%; }
+
+  /* Placeholder */
+  .empty-state { text-align: center; padding: 60px 20px; color: #3a5a7a; }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* SWOT grid */
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .swot-box { background: #0f2342; border: 1px solid #1a3a5c; border-radius: 8px; padding: 14px; }
+  .swot-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #1a3a5c; }
+  .swot-s .swot-title { color: #4ade80; }
+  .swot-w .swot-title { color: #f87171; }
+  .swot-o .swot-title { color: #60a5fa; }
+  .swot-t .swot-title { color: #fbbf24; }
+  .swot-item { font-size: 12px; color: #8aaccc; padding: 4px 0; border-bottom: 1px solid #0f2030; }
+  .swot-item:last-child { border-bottom: none; }
+
+  /* Notice bar */
+  .notice { background: #1a3a1a; border: 1px solid #2a5a2a; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #4ade80; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .notice.info { background: #1a2a4a; border-color: #2a4a8a; color: #60a5fa; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0a1628; }
+  ::-webkit-scrollbar-thumb { background: #1a3a5c; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">BD CAPTURE &amp;<br>INTELLIGENCE</div>
+      <div class="logo-sub">Powered by Shipley</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showScreen('dashboard')">
+        <span class="nav-icon">⊞</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showScreen('deal-detail')">
+        <span class="nav-icon">📋</span> Deal Detail
+      </div>
+      <div class="nav-item" onclick="showScreen('actions')">
+        <span class="nav-icon">✓</span> Actions
+        <span class="nav-badge">4</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('risks')">
+        <span class="nav-icon">⚠</span> Risks
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('partners')">
+        <span class="nav-icon">🤝</span> Partners
+      </div>
+      <div class="nav-item" onclick="showScreen('audit')">
+        <span class="nav-icon">📜</span> Audit Log
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SG</div>
+        <div>
+          <div style="font-size:11px;color:#8aaccc;font-weight:600;">Sam G.</div>
+          <div style="font-size:10px;color:#3a5a7a;">BD Lead</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN AREA -->
+  <div class="main">
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <div class="screen active" id="screen-dashboard">
+      <div class="topbar">
+        <div class="topbar-title">Pipeline Dashboard</div>
+        <div class="topbar-actions">
+          <input class="search-input" placeholder="🔍  Search deals…">
+          <button class="btn btn-primary">+ New Deal</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="notice info">
+          ℹ &nbsp; Wireframe Prototype v1.0 — click deal cards to view deal detail, use sidebar to navigate screens.
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Active Deals</div>
+            <div class="kpi-value">6</div>
+            <div class="kpi-sub">2 Blue · 3 Green · 1 White</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Portfolio Value</div>
+            <div class="kpi-value">$847M</div>
+            <div class="kpi-sub">Award amounts</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Open Actions</div>
+            <div class="kpi-value" style="color:#f87171">12</div>
+            <div class="kpi-sub">4 overdue</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Open Risks</div>
+            <div class="kpi-value" style="color:#fbbf24">8</div>
+            <div class="kpi-sub">3 high severity</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="section-bar">
+          <div style="font-size:13px;color:#6a8aaa;">6 opportunities</div>
+          <div class="filter-row">
+            <select class="filter-select"><option>All Gates</option><option>Red Team</option><option>Blue Team</option><option>White Team</option></select>
+            <select class="filter-select"><option>All Colors</option><option>Blue</option><option>Green</option><option>White</option></select>
+            <select class="filter-select"><option>All Status</option><option>Active</option><option>Hold</option></select>
+          </div>
+        </div>
+
+        <!-- Deal Cards -->
+        <div class="deals-grid">
+
+          <div class="deal-card blue" onclick="showScreen('deal-detail')">
+            <div class="deal-header">
+              <div class="deal-name">DISA Enterprise IT-as-a-Service (EITaaS) Wave 2</div>
+              <div class="deal-badges">
+                <span class="badge badge-blue">Blue</span>
+                <span class="badge badge-red-team">Red Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">Defense Information Systems Agency</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$340M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">Jun 15, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">Sam G.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Lisa K.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk">⚠ 3 risks</span>
+                <span class="count-badge count-action">✓ 5 actions</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-card green">
+            <div class="deal-header">
+              <div class="deal-name">Army ITES-3S Recompete — Network Services</div>
+              <div class="deal-badges">
+                <span class="badge badge-green">Green</span>
+                <span class="badge badge-blue-team">Blue Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">Department of the Army</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$175M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">Aug 30, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">Sam G.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Tom R.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk">⚠ 1 risk</span>
+                <span class="count-badge count-action">✓ 3 actions</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-card green">
+            <div class="deal-header">
+              <div class="deal-name">DHS CISA Cybersecurity Operations Center</div>
+              <div class="deal-badges">
+                <span class="badge badge-green">Green</span>
+                <span class="badge badge-white-team">White Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">Dept. of Homeland Security — CISA</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$120M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">May 1, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">Maria C.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Dave P.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk">⚠ 2 risks</span>
+                <span class="count-badge count-action">✓ 2 actions</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-card blue">
+            <div class="deal-header">
+              <div class="deal-name">NIH NITAAC CIO-SP4 Task Order — Cloud Migration</div>
+              <div class="deal-badges">
+                <span class="badge badge-blue">Blue</span>
+                <span class="badge badge-red-team">Red Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">National Institutes of Health</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$98M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">Jul 10, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">Sam G.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Lisa K.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk">⚠ 1 risk</span>
+                <span class="count-badge count-action">✓ 1 action</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-card green">
+            <div class="deal-header">
+              <div class="deal-name">VA Digital Modernization — Benefits IT</div>
+              <div class="deal-badges">
+                <span class="badge badge-green">Green</span>
+                <span class="badge badge-blue-team">Blue Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">Dept. of Veterans Affairs</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$85M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">Sep 15, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">James W.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Tom R.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk">⚠ 1 risk</span>
+                <span class="count-badge count-action">✓ 1 action</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-card white">
+            <div class="deal-header">
+              <div class="deal-name">DoD JWCC Task Order — Classified Cloud</div>
+              <div class="deal-badges">
+                <span class="badge badge-white">White</span>
+                <span class="badge badge-red-team">Red Team</span>
+              </div>
+            </div>
+            <div class="deal-agency">Department of Defense — Joint Enterprise</div>
+            <div class="deal-meta">
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Award Value</div>
+                <div class="deal-meta-value">$29M</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Due Date</div>
+                <div class="deal-meta-value">Apr 25, 2026</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">BD Lead</div>
+                <div class="deal-meta-value">Maria C.</div>
+              </div>
+              <div class="deal-meta-item">
+                <div class="deal-meta-label">Prop Manager</div>
+                <div class="deal-meta-value">Dave P.</div>
+              </div>
+            </div>
+            <div class="deal-footer">
+              <div class="deal-counts">
+                <span class="count-badge count-risk" style="color:#f87171;font-weight:700">⚠ 0 risks</span>
+                <span class="count-badge count-action">✓ 0 actions</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /deals-grid -->
+      </div>
+    </div><!-- /dashboard -->
+
+
+    <!-- ═══════════════ DEAL DETAIL ═══════════════ -->
+    <div class="screen" id="screen-deal-detail">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="color:#3a5a7a;font-size:12px;cursor:pointer;" onclick="showScreen('dashboard')">← Pipeline</span>
+          <span style="color:#3a5a7a;">/</span>
+          <div class="topbar-title">DISA EITaaS Wave 2</div>
+          <span class="badge badge-blue" style="font-size:10px;">Blue</span>
+          <span class="badge badge-red-team" style="font-size:10px;">Red Team</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline btn-sm">Export</button>
+          <button class="btn btn-primary btn-sm">Edit Deal</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="detail-header">
+          <div class="detail-title">DISA Enterprise IT-as-a-Service (EITaaS) Wave 2</div>
+          <div class="detail-sub">Defense Information Systems Agency &nbsp;·&nbsp; IDIQ / Task Order &nbsp;·&nbsp; 5-year base + 1 option</div>
+          <div class="detail-meta-grid">
+            <div class="detail-meta-box">
+              <div class="detail-meta-label">Award Value</div>
+              <div class="detail-meta-value">$340,000,000</div>
+            </div>
+            <div class="detail-meta-box">
+              <div class="detail-meta-label">RFP Due Date</div>
+              <div class="detail-meta-value">Jun 15, 2026</div>
+            </div>
+            <div class="detail-meta-box">
+              <div class="detail-meta-label">BD Lead</div>
+              <div class="detail-meta-value">Sam G.</div>
+            </div>
+            <div class="detail-meta-box">
+              <div class="detail-meta-label">Proposal Manager</div>
+              <div class="detail-meta-value">Lisa K.</div>
+            </div>
+            <div class="detail-meta-box">
+              <div class="detail-meta-label">Current Gate</div>
+              <div class="detail-meta-value" style="color:#fca5a5;">Red Team</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('overview')">Overview</div>
+          <div class="tab" onclick="showTab('program')">Program Details</div>
+          <div class="tab" onclick="showTab('competitive')">Competitive</div>
+          <div class="tab" onclick="showTab('stakeholders')">Stakeholders</div>
+          <div class="tab" onclick="showTab('swot')">SWOT</div>
+          <div class="tab" onclick="showTab('partners')">Partners</div>
+          <div class="tab" onclick="showTab('winstrategy')">Win Strategy</div>
+          <div class="tab" onclick="showTab('evalcriteria')">Eval Criteria</div>
+          <div class="tab" onclick="showTab('reviewstages')">Review Stages</div>
+        </div>
+
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="tab-overview">
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-box-title">Deal Leads</div>
+              <div class="info-row"><span class="info-label">BD Lead</span><span class="info-value">Sam Gruverman</span></div>
+              <div class="info-row"><span class="info-label">Proposal Manager</span><span class="info-value">Lisa K.</span></div>
+              <div class="info-row"><span class="info-label">Capture Manager</span><span class="info-value">Sam Gruverman</span></div>
+              <div class="info-row"><span class="info-label">Technical Lead</span><span class="info-value">Kevin R.</span></div>
+              <div class="info-row"><span class="info-label">Pricing Lead</span><span class="info-value">Janet B.</span></div>
+            </div>
+            <div class="info-box">
+              <div class="info-box-title">Key Metrics</div>
+              <div class="info-row"><span class="info-label">Award Amount</span><span class="info-value">$340M</span></div>
+              <div class="info-row"><span class="info-label">Period of Performance</span><span class="info-value">5yr Base + 1 Option</span></div>
+              <div class="info-row"><span class="info-label">Contract Type</span><span class="info-value">IDIQ / Task Order</span></div>
+              <div class="info-row"><span class="info-label">Deal Color</span><span class="info-value">Blue (New Business)</span></div>
+              <div class="info-row"><span class="info-label">Win Probability</span><span class="info-value">65%</span></div>
+            </div>
+            <div class="text-area-box full-width">
+              <div class="info-box-title">Executive Summary</div>
+              <div class="text-content">DISA is recompeting the EITaaS program to consolidate enterprise IT services across all CONUS installations. Wave 2 covers network infrastructure, end-user computing, and service desk operations. Our team holds the incumbent advantage on three of the five sub-lots. Key discriminators are our 99.98% uptime history on Wave 1, the new zero-trust architecture approach, and cost savings through consolidation. Primary risk is the new BoS requirements that require FedRAMP High authorization — we are currently FedRAMP Moderate.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Program Details Tab -->
+        <div class="tab-content" id="tab-program">
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-box-title">Program Information</div>
+              <div class="info-row"><span class="info-label">Program Name</span><span class="info-value">EITaaS Wave 2</span></div>
+              <div class="info-row"><span class="info-label">Agency</span><span class="info-value">Defense Info. Systems Agency</span></div>
+              <div class="info-row"><span class="info-label">Office</span><span class="info-value">DISA PEO EIS</span></div>
+              <div class="info-row"><span class="info-label">Contract Vehicle</span><span class="info-value">IDIQ / Multiple Award</span></div>
+              <div class="info-row"><span class="info-label">NAICS Code</span><span class="info-value">541512</span></div>
+              <div class="info-row"><span class="info-label">Set-Aside</span><span class="info-value">Full &amp; Open</span></div>
+            </div>
+            <div class="info-box">
+              <div class="info-box-title">Period of Performance</div>
+              <div class="info-row"><span class="info-label">Base Period</span><span class="info-value">5 years</span></div>
+              <div class="info-row"><span class="info-label">Option 1</span><span class="info-value">1 year</span></div>
+              <div class="info-row"><span class="info-label">Total Duration</span><span class="info-value">6 years</span></div>
+              <div class="info-row"><span class="info-label">Start Date (Est.)</span><span class="info-value">Oct 1, 2026</span></div>
+              <div class="info-row"><span class="info-label">End Date (Est.)</span><span class="info-value">Sep 30, 2032</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Competitive Tab -->
+        <div class="tab-content" id="tab-competitive">
+          <div style="margin-bottom:16px;">
+            <table class="data-table">
+              <thead><tr><th>Competitor</th><th>Estimated PWin</th><th>Strengths</th><th>Vulnerabilities</th><th>Our Advantage</th></tr></thead>
+              <tbody>
+                <tr><td>Leidos</td><td><span class="badge sev-red">High</span></td><td>Incumbent Wave 1 lots 1-2</td><td>Higher labor cost structure</td><td>Lower LCAT rates, better tooling</td></tr>
+                <tr><td>General Dynamics IT</td><td><span class="badge sev-yellow">Medium</span></td><td>DoD relationships</td><td>Legacy architecture</td><td>Zero-trust native design</td></tr>
+                <tr><td>Booz Allen Hamilton</td><td><span class="badge sev-yellow">Medium</span></td><td>DISA consulting relationships</td><td>No prime IT services track record</td><td>Proven BoS operations</td></tr>
+                <tr><td>Peraton</td><td><span class="badge sev-green">Low</span></td><td>Recent DISA wins</td><td>New entrant to EITaaS</td><td>3-year incumbent advantage</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Stakeholders Tab -->
+        <div class="tab-content" id="tab-stakeholders">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Organization</th><th>Role</th><th>Relationship Owner</th><th>Support Level</th><th>Last Contact</th></tr></thead>
+            <tbody>
+              <tr><td>Maj. Gen. Sarah T.</td><td>DISA</td><td>Program Executive Officer</td><td>Sam G.</td><td><span class="badge sev-green">Advocate</span></td><td>Mar 22, 2026</td></tr>
+              <tr><td>Col. James R.</td><td>DISA PEO EIS</td><td>Contracting Officer</td><td>Lisa K.</td><td><span class="badge sev-yellow">Neutral</span></td><td>Apr 2, 2026</td></tr>
+              <tr><td>Dr. Pat W.</td><td>DISA CTO</td><td>Technical Evaluator</td><td>Kevin R.</td><td><span class="badge sev-yellow">Neutral</span></td><td>Feb 14, 2026</td></tr>
+              <tr><td>Susan M.</td><td>DISA Contracting</td><td>Contract Specialist</td><td>Lisa K.</td><td><span class="badge sev-green">Advocate</span></td><td>Apr 5, 2026</td></tr>
+              <tr><td>Brig. Gen. Tom H.</td><td>J6 COCOM</td><td>End User / Beneficiary</td><td>Sam G.</td><td><span class="badge sev-red">Detractor</span></td><td>Jan 30, 2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SWOT Tab -->
+        <div class="tab-content" id="tab-swot">
+          <div class="swot-grid">
+            <div class="swot-box swot-s">
+              <div class="swot-title">Strengths</div>
+              <div class="swot-item">3-year incumbent with 99.98% uptime record</div>
+              <div class="swot-item">Proven zero-trust architecture deployment</div>
+              <div class="swot-item">Key personnel continuity — 85% retention</div>
+              <div class="swot-item">Strong DISA relationship at PEO level</div>
+            </div>
+            <div class="swot-box swot-w">
+              <div class="swot-title">Weaknesses</div>
+              <div class="swot-item">FedRAMP Moderate, not High — authorization in progress</div>
+              <div class="swot-item">Limited small business teaming for set-aside sub-lots</div>
+              <div class="swot-item">Higher overhead rate than top competitor</div>
+            </div>
+            <div class="swot-box swot-o">
+              <div class="swot-title">Opportunities</div>
+              <div class="swot-item">FedRAMP High authorization expected Aug 2026</div>
+              <div class="swot-item">New AI/ML requirements align with our capabilities</div>
+              <div class="swot-item">Incumbent transition cost risk favors continuity</div>
+            </div>
+            <div class="swot-box swot-t">
+              <div class="swot-title">Threats</div>
+              <div class="swot-item">Leidos aggressive pricing on Wave 1 lots</div>
+              <div class="swot-item">New BoS FedRAMP High requirement — timeline risk</div>
+              <div class="swot-item">Potential protest from losing incumbent lots</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partners Tab -->
+        <div class="tab-content" id="tab-partners">
+          <table class="data-table">
+            <thead><tr><th>Company</th><th>Role</th><th>Work Share %</th><th>Legal Status</th><th>Involvement Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Acme Corp (Prime)</strong></td><td>Program Management, IT Operations</td><td>55%</td><td><span class="badge sev-green">Executed</span></td><td><span class="badge status-open">Prime</span></td></tr>
+              <tr><td>CyberShield LLC</td><td>Cybersecurity / Zero-Trust</td><td>20%</td><td><span class="badge sev-green">Executed</span></td><td><span class="badge status-open">Confirmed</span></td></tr>
+              <tr><td>DataPath Inc.</td><td>Network Infrastructure</td><td>15%</td><td><span class="badge sev-yellow">In Negotiation</span></td><td><span class="badge status-mitigating">Pending LOI</span></td></tr>
+              <tr><td>TechStar SB</td><td>Small Business IT Support</td><td>10%</td><td><span class="badge sev-red">Not Started</span></td><td><span class="badge status-mitigating">Evaluating</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Win Strategy Tab -->
+        <div class="tab-content" id="tab-winstrategy">
+          <div class="info-grid">
+            <div class="info-box full-width">
+              <div class="info-box-title">Win Themes</div>
+              <div class="info-row"><span class="info-label">Theme 1</span><span class="info-value">Proven Incumbent + Zero Disruption to DISA Operations</span></div>
+              <div class="info-row"><span class="info-label">Theme 2</span><span class="info-value">Zero-Trust Native Architecture — Ahead of DoD Requirements</span></div>
+              <div class="info-row"><span class="info-label">Theme 3</span><span class="info-value">Best Value through Consolidation and Automation Savings</span></div>
+              <div class="info-row"><span class="info-label">Theme 4</span><span class="info-value">Mission-Dedicated Team with 85% Key Personnel Continuity</span></div>
+            </div>
+            <div class="info-box">
+              <div class="info-box-title">Discriminators</div>
+              <div class="info-row"><span class="info-label">Discriminator 1</span><span class="info-value">FedRAMP High (in progress, Aug 2026)</span></div>
+              <div class="info-row"><span class="info-label">Discriminator 2</span><span class="info-value">99.98% uptime SLA on existing contract</span></div>
+              <div class="info-row"><span class="info-label">Discriminator 3</span><span class="info-value">AI-driven NOC reducing ticket volume 30%</span></div>
+            </div>
+            <div class="info-box">
+              <div class="info-box-title">Engagement Approach</div>
+              <div class="info-row"><span class="info-label">Customer Engagement</span><span class="info-value">Monthly briefings to PEO; weekly with CO</span></div>
+              <div class="info-row"><span class="info-label">Positioning</span><span class="info-value">Incumbent advantage — position continuity value early</span></div>
+              <div class="info-row"><span class="info-label">Price Strategy</span><span class="info-value">Price-to-Win targeting 5% below Leidos benchmark</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eval Criteria Tab -->
+        <div class="tab-content" id="tab-evalcriteria">
+          <table class="data-table">
+            <thead><tr><th>Factor</th><th>Subfactor</th><th>Weight</th><th>Our Approach</th><th>Gap</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Technical</strong></td><td>Zero-Trust Architecture</td><td>25%</td><td>Native ZTA design, FedRAMP High in progress</td><td><span class="badge sev-yellow">Minor</span></td></tr>
+              <tr><td><strong>Technical</strong></td><td>Service Desk Operations</td><td>20%</td><td>AI-augmented NOC, 4hr SLA proven</td><td><span class="badge sev-green">None</span></td></tr>
+              <tr><td><strong>Management</strong></td><td>Key Personnel</td><td>20%</td><td>85% incumbent personnel committed</td><td><span class="badge sev-green">None</span></td></tr>
+              <tr><td><strong>Management</strong></td><td>Transition Plan</td><td>15%</td><td>30-day incumbent transition — no disruption</td><td><span class="badge sev-green">None</span></td></tr>
+              <tr><td><strong>Past Performance</strong></td><td>Relevant Contracts</td><td>10%</td><td>3 EITaaS Wave 1 lots, DoD IT references</td><td><span class="badge sev-green">None</span></td></tr>
+              <tr><td><strong>Price</strong></td><td>Total Evaluated Price</td><td>10%</td><td>Targeting 5% below Leidos, PTW analysis Q2</td><td><span class="badge sev-yellow">TBD</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Review Stages Tab -->
+        <div class="tab-content" id="tab-reviewstages">
+          <table class="data-table">
+            <thead><tr><th>Review</th><th>Stage</th><th>Date</th><th>Lead Reviewer</th><th>Status</th><th>Key Findings</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-red-team">Red Team</span></td>
+                <td>Draft Technical Volume</td>
+                <td>Apr 18, 2026</td>
+                <td>Dr. Ann L. (External)</td>
+                <td><span class="badge status-open">Scheduled</span></td>
+                <td style="color:#4a6a8a;font-style:italic;">Not yet conducted</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-blue-team">Blue Team</span></td>
+                <td>Full Proposal Draft</td>
+                <td>May 22, 2026</td>
+                <td>TBD</td>
+                <td><span class="badge" style="background:#1a1a2a;color:#4a6a8a;">Pending</span></td>
+                <td style="color:#4a6a8a;font-style:italic;">Pending Red Team</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-white-team">White Team (BAFO)</span></td>
+                <td>Final Review / Pricing</td>
+                <td>Jun 5, 2026</td>
+                <td>TBD</td>
+                <td><span class="badge" style="background:#1a1a2a;color:#4a6a8a;">Pending</span></td>
+                <td style="color:#4a6a8a;font-style:italic;">Pending Blue Team</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /deal-detail -->
+
+
+    <!-- ═══════════════ ACTIONS ═══════════════ -->
+    <div class="screen" id="screen-actions">
+      <div class="topbar">
+        <div class="topbar-title">Actions</div>
+        <div class="topbar-actions">
+          <select class="filter-select"><option>All Deals</option><option>EITaaS Wave 2</option><option>ITES-3S</option></select>
+          <select class="filter-select"><option>All Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+          <select class="filter-select"><option>All Status</option><option>Open</option><option>In Progress</option><option>Completed</option></select>
+          <button class="btn btn-primary btn-sm">+ New Action</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="notice">
+          ⚠ &nbsp; 4 actions are overdue — assign owners or update due dates.
+        </div>
+        <div class="action-list">
+          <div class="action-card overdue">
+            <div class="action-priority priority-high"></div>
+            <div class="action-body">
+              <div class="action-title">Complete FedRAMP High gap analysis and submit to 3PAO</div>
+              <div class="action-meta">
+                <span>📋 EITaaS Wave 2</span>
+                <span>👤 Kevin R.</span>
+                <span style="color:#f87171;">📅 Due Apr 5, 2026 — OVERDUE</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-open">Open</span></div>
+          </div>
+          <div class="action-card overdue">
+            <div class="action-priority priority-high"></div>
+            <div class="action-body">
+              <div class="action-title">Finalize teaming agreement with DataPath Inc.</div>
+              <div class="action-meta">
+                <span>📋 EITaaS Wave 2</span>
+                <span>👤 Sam G.</span>
+                <span style="color:#f87171;">📅 Due Apr 7, 2026 — OVERDUE</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-open">Open</span></div>
+          </div>
+          <div class="action-card">
+            <div class="action-priority priority-high"></div>
+            <div class="action-body">
+              <div class="action-title">Schedule Red Team review kickoff with Dr. Ann L.</div>
+              <div class="action-meta">
+                <span>📋 EITaaS Wave 2</span>
+                <span>👤 Lisa K.</span>
+                <span>📅 Due Apr 12, 2026</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-mitigating">In Progress</span></div>
+          </div>
+          <div class="action-card">
+            <div class="action-priority priority-medium"></div>
+            <div class="action-body">
+              <div class="action-title">Develop price-to-win analysis — Leidos benchmark</div>
+              <div class="action-meta">
+                <span>📋 EITaaS Wave 2</span>
+                <span>👤 Janet B.</span>
+                <span>📅 Due Apr 20, 2026</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-open">Open</span></div>
+          </div>
+          <div class="action-card overdue">
+            <div class="action-priority priority-high"></div>
+            <div class="action-body">
+              <div class="action-title">Submit ITES-3S past performance questionnaires to customer</div>
+              <div class="action-meta">
+                <span>📋 ITES-3S</span>
+                <span>👤 Tom R.</span>
+                <span style="color:#f87171;">📅 Due Apr 3, 2026 — OVERDUE</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-open">Open</span></div>
+          </div>
+          <div class="action-card">
+            <div class="action-priority priority-medium"></div>
+            <div class="action-body">
+              <div class="action-title">Brief ITES-3S solution architecture to technical team</div>
+              <div class="action-meta">
+                <span>📋 ITES-3S</span>
+                <span>👤 Sam G.</span>
+                <span>📅 Due Apr 17, 2026</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-mitigating">In Progress</span></div>
+          </div>
+          <div class="action-card">
+            <div class="action-priority priority-low"></div>
+            <div class="action-body">
+              <div class="action-title">Update competitive analysis — VA Digital Modernization</div>
+              <div class="action-meta">
+                <span>📋 VA Digital Modernization</span>
+                <span>👤 James W.</span>
+                <span>📅 Due Apr 30, 2026</span>
+              </div>
+            </div>
+            <div class="action-status"><span class="badge status-done">Completed</span></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /actions -->
+
+
+    <!-- ═══════════════ RISKS ═══════════════ -->
+    <div class="screen" id="screen-risks">
+      <div class="topbar">
+        <div class="topbar-title">Risk Register</div>
+        <div class="topbar-actions">
+          <select class="filter-select"><option>All Deals</option><option>EITaaS Wave 2</option><option>ITES-3S</option></select>
+          <select class="filter-select"><option>All Severity</option><option>High</option><option>Medium</option><option>Low</option></select>
+          <select class="filter-select"><option>All Status</option><option>Open</option><option>Mitigating</option><option>Closed</option></select>
+          <button class="btn btn-primary btn-sm">+ New Risk</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="risk-list">
+          <div class="risk-card severity-red">
+            <div class="risk-header">
+              <div>
+                <div class="risk-title">FedRAMP High Authorization Timeline</div>
+                <div style="font-size:11px;color:#5a7a9a;margin-top:3px;">📋 EITaaS Wave 2 &nbsp;·&nbsp; 👤 Kevin R.</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <span class="badge sev-red">High Severity</span>
+                <span class="badge status-mitigating">Mitigating</span>
+              </div>
+            </div>
+            <div class="risk-context">The RFP requires FedRAMP High authorization at time of proposal submission. Our current authorization is FedRAMP Moderate. The 3PAO assessment is in progress but the timeline for full High authorization may slip past the Jun 15 RFP due date, making our proposal non-compliant.</div>
+            <div class="risk-mitigation-label">Mitigation Plan</div>
+            <div class="risk-mitigation">Accelerating 3PAO assessment with dedicated team. Submitted request to DISA CO for clarification on whether "in-process" authorization is acceptable at submission. If timeline cannot be met, evaluating subcontracting the High enclave to a FedRAMP High authorized partner (CyberShield). Decision gate: May 1, 2026.</div>
+          </div>
+
+          <div class="risk-card severity-red">
+            <div class="risk-header">
+              <div>
+                <div class="risk-title">DataPath Teaming Agreement — Legal Delay</div>
+                <div style="font-size:11px;color:#5a7a9a;margin-top:3px;">📋 EITaaS Wave 2 &nbsp;·&nbsp; 👤 Sam G.</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <span class="badge sev-red">High Severity</span>
+                <span class="badge status-open">Open</span>
+              </div>
+            </div>
+            <div class="risk-context">DataPath's legal team is requesting NDA revisions that our counsel has flagged as non-standard. Negotiations have been ongoing for 3 weeks with no resolution. Without a signed teaming agreement, DataPath cannot be named in the proposal, which risks a gap in the network infrastructure LOE.</div>
+            <div class="risk-mitigation-label">Mitigation Plan</div>
+            <div class="risk-mitigation">Escalating to VP level on both sides. Identified backup sub Meridian Networks who can fill the network infrastructure role. If no resolution by Apr 15, will pivot to Meridian and drop DataPath.</div>
+          </div>
+
+          <div class="risk-card severity-yellow">
+            <div class="risk-header">
+              <div>
+                <div class="risk-title">Key Personnel — Technical Lead Availability</div>
+                <div style="font-size:11px;color:#5a7a9a;margin-top:3px;">📋 EITaaS Wave 2 &nbsp;·&nbsp; 👤 Sam G.</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <span class="badge sev-yellow">Medium Severity</span>
+                <span class="badge status-open">Open</span>
+              </div>
+            </div>
+            <div class="risk-context">Kevin R. (Technical Lead) is currently supporting two other active proposals. His availability for the EITaaS Red Team and the proposal writing period (May-June) is limited to 50% of full-time. The technical volume requires a significant amount of his direct input.</div>
+            <div class="risk-mitigation-label">Mitigation Plan</div>
+            <div class="risk-mitigation">Working with resource management to shift Kevin off the ITES-3S proposal by May 1 to free up 80% availability for EITaaS through submission. Identified backup SME (Dr. Paul T.) who can handle the network infrastructure subsections.</div>
+          </div>
+
+          <div class="risk-card severity-green">
+            <div class="risk-header">
+              <div>
+                <div class="risk-title">ITES-3S — Pricing Competitiveness</div>
+                <div style="font-size:11px;color:#5a7a9a;margin-top:3px;">📋 ITES-3S &nbsp;·&nbsp; 👤 Janet B.</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <span class="badge sev-green">Low Severity</span>
+                <span class="badge status-open">Open</span>
+              </div>
+            </div>
+            <div class="risk-context">Initial PTW analysis suggests our labor rates may be 8-12% above the IGCE. Army evaluation is best value but price is weighted 25%. If we are materially above the IGCE we risk a technical score advantage not being sufficient to overcome the price differential.</div>
+            <div class="risk-mitigation-label">Mitigation Plan</div>
+            <div class="risk-mitigation">Reviewing LCAT mix and indirect rate allocation. Exploring subcontractor options to offset direct labor cost. Final PTW will be complete by Apr 20 with a clear go/no-go on pricing strategy.</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /risks -->
+
+
+    <!-- ═══════════════ PARTNERS ═══════════════ -->
+    <div class="screen" id="screen-partners">
+      <div class="topbar">
+        <div class="topbar-title">Partners</div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary btn-sm">+ Add Partner</button>
+        </div>
+      </div>
+      <div class="content">
+        <table class="data-table">
+          <thead><tr><th>Company</th><th>Deal</th><th>Role</th><th>Work Share</th><th>Legal Status</th><th>Involvement</th></tr></thead>
+          <tbody>
+            <tr><td><strong>CyberShield LLC</strong></td><td>EITaaS Wave 2</td><td>Cybersecurity / ZTA</td><td>20%</td><td><span class="badge sev-green">TA Executed</span></td><td><span class="badge status-open">Confirmed</span></td></tr>
+            <tr><td>DataPath Inc.</td><td>EITaaS Wave 2</td><td>Network Infrastructure</td><td>15%</td><td><span class="badge sev-yellow">Negotiating</span></td><td><span class="badge status-mitigating">At Risk</span></td></tr>
+            <tr><td>TechStar SB</td><td>EITaaS Wave 2</td><td>Small Business Set-Aside</td><td>10%</td><td><span class="badge sev-red">Not Started</span></td><td><span class="badge status-mitigating">Evaluating</span></td></tr>
+            <tr><td>NetReach Inc.</td><td>ITES-3S</td><td>Network Operations</td><td>25%</td><td><span class="badge sev-green">TA Executed</span></td><td><span class="badge status-open">Confirmed</span></td></tr>
+            <tr><td>CloudPath LLC</td><td>ITES-3S</td><td>Cloud Migration</td><td>15%</td><td><span class="badge sev-green">TA Executed</span></td><td><span class="badge status-open">Confirmed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /partners -->
+
+
+    <!-- ═══════════════ AUDIT ═══════════════ -->
+    <div class="screen" id="screen-audit">
+      <div class="topbar">
+        <div class="topbar-title">Audit Log</div>
+      </div>
+      <div class="content">
+        <table class="data-table">
+          <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Resource</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td style="white-space:nowrap;">Apr 9, 2026 09:14</td><td>Sam G.</td><td><span class="badge status-mitigating">UPDATE</span></td><td>Risk</td><td>Updated mitigation plan for "FedRAMP High Authorization Timeline"</td></tr>
+            <tr><td style="white-space:nowrap;">Apr 9, 2026 08:52</td><td>Lisa K.</td><td><span class="badge status-open">CREATE</span></td><td>Action</td><td>New action: "Schedule Red Team review kickoff with Dr. Ann L."</td></tr>
+            <tr><td style="white-space:nowrap;">Apr 8, 2026 17:30</td><td>Sam G.</td><td><span class="badge status-mitigating">UPDATE</span></td><td>Deal</td><td>Updated win probability from 60% to 65% on EITaaS Wave 2</td></tr>
+            <tr><td style="white-space:nowrap;">Apr 8, 2026 14:12</td><td>Kevin R.</td><td><span class="badge status-mitigating">UPDATE</span></td><td>Eval Criteria</td><td>Added gap detail to Zero-Trust Architecture evaluation factor</td></tr>
+            <tr><td style="white-space:nowrap;">Apr 7, 2026 11:05</td><td>Sam G.</td><td><span class="badge status-open">CREATE</span></td><td>Risk</td><td>New risk: "DataPath Teaming Agreement — Legal Delay"</td></tr>
+            <tr><td style="white-space:nowrap;">Apr 6, 2026 16:00</td><td>Tom R.</td><td><span class="badge status-done">DELETE</span></td><td>Action</td><td>Removed duplicate action item on ITES-3S technical volume</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /audit -->
+
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<script>
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('screen-' + screenId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(screenId)) {
+        n.classList.add('active');
+      }
+    });
+  }
+
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
