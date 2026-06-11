@@ -10,6 +10,10 @@
 8. `08-ops-deployment-runbook.md`
 9. `09-roadmap-phase-backlog.md`
 10. `10-ai-agent-execution-playbook.md`
+11. `11-deck-traceability-checkpoint.md`
+12. `12-internal-preview-checklist.md`
+13. `13-weighted-readiness-decision-tree.md`
+14. `14-phase-1.5-deal-search-spec-draft.md`
 
 Audience:
 - Senior software engineer
