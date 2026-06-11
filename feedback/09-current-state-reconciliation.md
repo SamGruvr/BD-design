@@ -31,7 +31,7 @@ This file reconciles the original feedback package with the current implementati
 | H6 | Integration DB test validity | Open | Rewritten: real `SELECT 1` query, fails on DB error. `catch/toBeDefined` pattern removed | `Closed` |
 | S2–S5 | CI security gates | Open | `codeql.yml`, `gitleaks.yml`, `dependency-review.yml`, `dependabot.yml` all present in `.github/` | `Closed` |
 | SC2 | Pagination on `Deal.list()` | Not tracked | `list(filters, limit = 50, offset = 0)` with `LIMIT/OFFSET` in query | `Closed` |
-| C1 | TLS `rejectUnauthorized` | Open | Env-driven: `DB_SSL_REJECT_UNAUTHORIZED === 'true'`, CA path supported via `DB_SSL_CA_PATH`. **Defaults to `false` when env var unset.** Secure only if production env sets it. Vercel prod env not verified | `Partial` |
+| C1 | TLS `rejectUnauthorized` | Open | **Closed 2026-06-11.** `DB_SSL_CA` env var support added (commit `a7d33d4`), Supabase CA cert + `DB_SSL_REJECT_UNAUTHORIZED=true` set in Vercel production, deployed and login-verified with strict TLS | `Closed` |
 | C2 | DDL-on-demand | Open (unlisted May 2) | `ensure*()` schema functions still present in `User.js`, `Role.js`, `AdminActionQueue.js`, `gateReadiness.js`, `UserRepository.js` | `Open` |
 | H3 | Distributed rate limiting | Open | Still in-memory `Map` in `rateLimit.js`; no Redis | `Open` |
 | M4 | `gateReadiness.js` test coverage | Open | Zero tests on core scoring logic | `Open` |
@@ -44,8 +44,7 @@ This file reconciles the original feedback package with the current implementati
 
 ## Reconciled Priority Order (Now)
 
-1. `C1` Confirm `DB_SSL_REJECT_UNAUTHORIZED=true` set in Vercel backend production env (config check, not code change)
-2. `M4` gateReadiness unit tests — core business logic, silent scoring bugs possible until covered
+1. `M4` gateReadiness unit tests — core business logic, silent scoring bugs possible until covered
 3. `C2` Replace DDL-on-demand with startup migrations
 4. `H3` Serverless-safe rate limiting (Redis-backed)
 5. `S1`/`M7`/`T3` CI hardening: blocking `npm audit`, ESLint, coverage threshold
