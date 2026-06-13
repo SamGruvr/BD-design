@@ -11,7 +11,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 ## Group A — Schema Deltas
 
-### [x] A1 — Step 2 Qualifying Checklist (PRD §5.3.2)
+### [ ] A1 — Step 2 Qualifying Checklist (PRD §5.3.2)
 
 **Exists:** `deal_step3_readiness_checklist` (Step 3 only). Nothing for Step 2.
 **Gap:** new sub-resource, four yes/no + notes questions.
@@ -20,7 +20,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** M
 
-### [x] A2 — Key Meetings: attendees field (PRD §5.3.3)
+### [ ] A2 — Key Meetings: attendees field (PRD §5.3.3)
 
 **Exists:** `deal_key_meetings` (meeting_type, meeting_date, notes).
 **Gap:** deck and PRD require attendees.
@@ -29,7 +29,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** S
 
-### [x] A3 — Teaming Strategy: rationale per sub (PRD §5.3.3)
+### [ ] A3 — Teaming Strategy: rationale per sub (PRD §5.3.3)
 
 **Exists:** `deal_partners` (role, work_percentage, legal_status, selection_status, agreement_type, ta_status) + partner taxonomy (migration 007).
 **Gap:** deck slide 16 wants size and rationale per teaming partner.
@@ -38,7 +38,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** S-M
 
-### [x] A4 — Strengths/Weaknesses/Benefits — "Why Us?" (PRD §5.3.3)
+### [ ] A4 — Strengths/Weaknesses/Benefits — "Why Us?" (PRD §5.3.3)
 
 **Exists:** `swot` (category, description, impact) — but SWOT tab is a different artifact than deck slide 18.
 **Gap:** Step 3 needs three free-text blocks: strengths, weaknesses, benefits-to-customer/why-us.
@@ -47,7 +47,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** M
 
-### [x] A5 — Voice of the Customer: stakeholder link + fields (PRD §5.3.3)
+### [ ] A5 — Voice of the Customer: stakeholder link + fields (PRD §5.3.3)
 
 **Exists:** `deal_voice_of_customer` (concern_need, associated_customer text, response_strategy).
 **Gap:** PRD wants stakeholder picked from previously entered stakeholders or added new, plus role/title, other notes, [Company] access.
@@ -60,7 +60,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 ## Group B — UI Exposure (schema already done)
 
-### [x] B1 — Capabilities Alignment scoring legend + concerns row (PRD §5.3.2/§5.3.3)
+### [ ] B1 — Capabilities Alignment scoring legend + concerns row (PRD §5.3.2/§5.3.3)
 
 **Exists:** `deal_capability_alignment` with `referenceability_score`, `concern_weaknesses`.
 **Gap:** verify/complete UI.
@@ -83,13 +83,13 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** S
 
-### [x] B4 — Deal color badge descriptions (PRD §5.2, status Partial)
+### [ ] B4 — Deal color badge descriptions (PRD §5.2, status Partial)
 
 > On dashboard deal cards, add a tooltip or sublabel to the color badge: Blue = new business, Green = recompete, White = IDIQ/task order. Component test.
 
 **Size:** S
 
-### [x] B5 — Competitor demography (PRD §5.3.2)
+### [ ] B5 — Competitor demography (PRD §5.3.2)
 
 **Exists:** `deal_competitor_hypotheses` (competitor_name, rationale, details, confidence).
 **Gap:** PRD wants demography per competitor (SB, WOSB, DVSB, ANC, Native American, Large).
@@ -102,7 +102,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 ## Group C — Cross-Cutting
 
-### [x] C1 — Executive Readout View (PRD §5.2, P1)
+### [ ] C1 — Executive Readout View (PRD §5.2, P1)
 
 **Exists:** deck-ordered traceability (review-pack 11); deal detail sections.
 **Gap:** a dedicated view that steps or scrolls through Step 2/3 sections in deck order, ending at the Decision Point.
@@ -111,7 +111,7 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 **Size:** M
 
-### [x] C2 — Role rename: analyst → standard_user (PRD §4.6)
+### [ ] C2 — Role rename: analyst → standard_user (PRD §4.6)
 
 > Migration: `UPDATE roles SET name='standard_user' WHERE name='analyst';` plus same on `users.role` values. Global find/replace `analyst` → `standard_user` in backend role checks and frontend role displays. Update seed files and `.env.example` references. Keep a one-release compatibility alias in the auth middleware (accept both, log deprecation) to avoid breaking existing JWTs until expiry. Run full test suite.
 
@@ -129,12 +129,12 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 | Item | Source | Size |
 |---|---|---|
-| [x] D1 — gateReadiness unit tests (M4) | `08-codex-action-plan.md` M4 | S |
+| [ ] D1 — gateReadiness unit tests (M4) | `08-codex-action-plan.md` M4 | S |
 | [ ] D2 — DDL-on-demand → startup migrations (C2 in 08) | `08` C2 — `ensure*()` still in 5 files | M |
 | [ ] D3 — Redis-backed rate limiter (H3) | `08` H3 | S-M |
 | [ ] D4 — CI: blocking npm audit, ESLint, coverage threshold (S1/M7/T3) | `08` | S |
 | [ ] D5 — auth test supertest rewrite (M5), auth.js split (M8) | `08` | S |
-| [x] D6 — `/health` endpoint performs `SELECT 1` against DB | new (found 2026-06-11: health returns ok with DB down) | S |
+| [ ] D6 — `/health` endpoint performs `SELECT 1` against DB | new (found 2026-06-11: health returns ok with DB down) | S |
 
 ---
 
@@ -146,15 +146,6 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 4. **Ongoing:** D2-D5 interleaved, one per sprint.
 
 Total: roughly 2-3 focused weeks of agent-driven work for Groups A-C; Group D adds ~1.
-
-## Execution Notes — 2026-06-12
-
-Items A1-A5, B1, B4, B5, C1, C2, D1, D6 implemented and tested (112/112 backend, 23/23 frontend, production build clean). Migration 011/012 applied to live Supabase.
-
-- B2: verified — customer knowledge UI already exposes familiarity + 4 positioning steps. Closed by inspection.
-- B3: deal review decision/decision_notes flow exists in DealDetail; Executive Readout (C1) now presents both Decision Points with outcome language. Closed.
-- C3: repeating-entry forms use add-and-clear (= Save & Create New); single-row sections have explicit Save. Triple-button pattern deferred — revisit only if users ask.
-- New finding from D1 tests: **step 3 weights sum to 110** (35+20+20+15+5+5+10) and empty sections count as 100%, giving step 2 a 10-point floor from the empty Reserve section. Documented in `gateReadiness.test.js`; normalize weights in a future pass (suggest M10 doc item).
 
 ## Doc Maintenance
 

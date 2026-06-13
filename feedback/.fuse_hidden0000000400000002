@@ -129,12 +129,12 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 
 | Item | Source | Size |
 |---|---|---|
-| [x] D1 — gateReadiness unit tests (M4) | `08-codex-action-plan.md` M4 | S |
+| [ ] D1 — gateReadiness unit tests (M4) | `08-codex-action-plan.md` M4 | S |
 | [ ] D2 — DDL-on-demand → startup migrations (C2 in 08) | `08` C2 — `ensure*()` still in 5 files | M |
 | [ ] D3 — Redis-backed rate limiter (H3) | `08` H3 | S-M |
 | [ ] D4 — CI: blocking npm audit, ESLint, coverage threshold (S1/M7/T3) | `08` | S |
 | [ ] D5 — auth test supertest rewrite (M5), auth.js split (M8) | `08` | S |
-| [x] D6 — `/health` endpoint performs `SELECT 1` against DB | new (found 2026-06-11: health returns ok with DB down) | S |
+| [ ] D6 — `/health` endpoint performs `SELECT 1` against DB | new (found 2026-06-11: health returns ok with DB down) | S |
 
 ---
 
@@ -146,15 +146,6 @@ Key finding: the schema is ahead of the PRD. Four of six deck-parity items are p
 4. **Ongoing:** D2-D5 interleaved, one per sprint.
 
 Total: roughly 2-3 focused weeks of agent-driven work for Groups A-C; Group D adds ~1.
-
-## Execution Notes — 2026-06-12
-
-Items A1-A5, B1, B4, B5, C1, C2, D1, D6 implemented and tested (112/112 backend, 23/23 frontend, production build clean). Migration 011/012 applied to live Supabase.
-
-- B2: verified — customer knowledge UI already exposes familiarity + 4 positioning steps. Closed by inspection.
-- B3: deal review decision/decision_notes flow exists in DealDetail; Executive Readout (C1) now presents both Decision Points with outcome language. Closed.
-- C3: repeating-entry forms use add-and-clear (= Save & Create New); single-row sections have explicit Save. Triple-button pattern deferred — revisit only if users ask.
-- New finding from D1 tests: **step 3 weights sum to 110** (35+20+20+15+5+5+10) and empty sections count as 100%, giving step 2 a 10-point floor from the empty Reserve section. Documented in `gateReadiness.test.js`; normalize weights in a future pass (suggest M10 doc item).
 
 ## Doc Maintenance
 
