@@ -156,6 +156,19 @@ Items A1-A5, B1, B4, B5, C1, C2, D1, D6 implemented and tested (112/112 backend,
 - C3: repeating-entry forms use add-and-clear (= Save & Create New); single-row sections have explicit Save. Triple-button pattern deferred — revisit only if users ask.
 - New finding from D1 tests: **step 3 weights sum to 110** (35+20+20+15+5+5+10) and empty sections count as 100%, giving step 2 a 10-point floor from the empty Reserve section. Documented in `gateReadiness.test.js`; normalize weights in a future pass (suggest M10 doc item).
 
+## Execution Notes — 2026-06-13 (Commit + Live Verification)
+
+Code for A1-D6 was written and tested locally on 2026-06-12 but not committed at that time. Committed and pushed 2026-06-13 as `7833339` ("POC completion plan A1-D6"). Vercel auto-deployed both `bd-platform-app` and `bd-platform-api` to production on this commit.
+
+Live functional/UX pass against production (2026-06-13) confirmed, with no defects found:
+- Login, dashboard, role display (`STANDARD_USER`).
+- B4 badge descriptions render correctly ("Blue Deal · New business", "Green Deal · Recompete").
+- C1 Executive Readout: step-through (13 sections, correct deck order) and scroll mode both work.
+- A1 Step 2 Checklist: radio selection persisted through a page reload, confirming migration 011 and the PUT endpoint write to the live DB correctly.
+- A2, A4, A5, B1, B5 all render as specified in both the capture form and the readout.
+
+One unrelated incident during testing: Supabase project auto-paused from inactivity, surfacing as a transient "Authentication service unavailable" 503 on first login attempt. Resolved on its own (~2 min) once the project finished restoring (`COMING_UP` → `ACTIVE_HEALTHY`). Not a code defect — noted in `02-current-state-architecture.md` as a known behavior, no retry/backoff currently implemented for it.
+
 ## Doc Maintenance
 
 When an item closes, mark `[x]` here and reflect status in `09-current-state-reconciliation.md`. PRD v1.3 feature tables should flip Partial→Built as B1/B3/B4/C1 land.

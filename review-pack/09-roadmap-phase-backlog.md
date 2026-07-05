@@ -25,6 +25,9 @@ Deal search draft spec created for review: `14-phase-1.5-deal-search-spec-draft.
 3. Strengthen security/compliance operations and release controls.
 
 ## Priority Queue (Current)
+- P1: VOC stakeholder dropdown (sourced from deal stakeholders, "add new" path) — replaces current free-text fallback.
+- P1: Surface `teaming_rationale` and partner size/demography in the Partners tab UI — data model and API already support it.
+- P1: Normalize `gateReadiness.js` section weights (Step 3 currently sums to 110, not 100) and decide empty-section scoring semantics.
 - P1: Deal search capability (first Phase 1.5 backlog item)
 - P1: UX consistency/usability improvements
 - P1: Step 1 executive decision board refinement: align Opportunity Details to deck sections (Opportunity Information + Schedule and Key Dates), keep summary cards, include details-page anchor links, and add metric explainers (for example Win Probability calc method). Mockups: `docs/mockups/executive-gate-decision-mockup.html`, `docs/mockups/step-1-details-mockup.html`.
@@ -40,7 +43,22 @@ Deal search draft spec created for review: `14-phase-1.5-deal-search-spec-draft.
 - P1: Add Partner Profile field `summary & details` for richer partner qualification notes.
 - P2: Conduct targeted UX/content review of Capture Context tab (information architecture, ordering clarity, and guidance copy).
 
-## Implemented Since Last Checkpoint
+## Implemented Since Last Checkpoint (2026-06-13 — POC Completion Plan A1-D6)
+- Step 2 Qualifying Checklist (`deal_step2_checklist`) — four yes/no + notes questions, dedicated PUT endpoint.
+- Key Meetings `attendees` field.
+- Partner `teaming_rationale` field (backend/DB only — Partners tab UI not yet updated).
+- Strengths / Weaknesses / Benefits-to-customer ("Why Us?") — `deal_swb`, distinct from the SWOT tab.
+- Voice of Customer: `stakeholder_role`, `other_notes`, `company_access` fields (stakeholder linkage still free-text, not a dropdown).
+- Competitor hypotheses demography field (SB/WOSB/DVSB/ANC/Native American/Large).
+- Capability Alignment scoring legend and persistent concerns/weaknesses row confirmed live.
+- Deal color badge descriptions (Blue = New business, Green = Recompete, White = IDIQ/task order).
+- Executive Readout view (`/deals/:id/readout`) — deck-ordered, step-through and scroll modes, ends at recorded/pending decision.
+- Role rename `analyst` → `standard_user` (straight cutover, no compatibility alias — full test suite passed before deploy).
+- `gateReadiness.js` unit test coverage (7 tests); documented two pre-existing scoring quirks (Step 3 weights sum to 110; empty sections score 100%) rather than changing behavior.
+- `/health` endpoint now performs a real DB `SELECT 1` instead of a no-op check.
+- Live-verified on production 2026-06-13 (Vercel + Supabase) after a same-day commit/push and Supabase auto-pause/restore cycle.
+
+## Implemented Since Last Checkpoint (prior)
 - Capture Content moved from placeholder to live deck-ordered workflow page with section readiness.
 - Stakeholders moved from placeholder to live workflow page with editable `profile`.
 - Reports moved from placeholder to live cross-deal decision-readiness baseline.

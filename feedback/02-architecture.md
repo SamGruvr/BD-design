@@ -95,7 +95,7 @@ CLAUDE.md specifies `execution/` (Python scripts), `directives/` (Markdown SOPs)
 | `README copy.md` | Dev artifact |
 | `TEST_RESULTS.txt` | Dev artifact |
 | `CHECKLIST.md`, `INDEX.md`, `SUMMARY.md` | AI session artifacts |
-| `BD_Platform_PRD_v1.0.docx` | Product artifact — belongs in `docs/` |
+| ~~`BD_Platform_PRD_v1.0.docx`~~ | Resolved — deleted from repo (commit `f8ba28e`) |
 | `BD_Platform_Wireframe_v1.0.html` | Product artifact — belongs in `docs/` |
 
 **Fix:** See [08-codex-action-plan.md](08-codex-action-plan.md) item `M3`.
@@ -106,6 +106,6 @@ CLAUDE.md specifies `execution/` (Python scripts), `directives/` (Markdown SOPs)
 
 - Middleware stack order is correct and follows security-first principle
 - 20 route files map cleanly to domain areas with correct REST nesting
-- `gateReadiness.js` is a pure function — no side effects, takes data, returns result
+- `gateReadiness.js` is a pure function — no side effects, takes data, returns result; now has unit test coverage (7 tests, added 2026-06-13) confirming weighted scoring and threshold behavior
 - Docker and Vercel deployment configs coexist correctly without modification
 - `api/index.js` serverless entry point is clean: `module.exports = require('../src/app')`

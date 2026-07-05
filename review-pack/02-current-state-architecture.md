@@ -18,6 +18,7 @@
 - Bootstrap admin email parsing supported via backend env variables.
 - User admin supports create/edit/deactivate/delete/reset-password.
 - Auth routes now include configurable rate limiting for abuse resistance (`/login`, `/register`, `/forgot-password`, `/reset-password`).
+- Role taxonomy renamed: `analyst` → `standard_user` (migration `012_role_rename_standard_user.sql`, applied to `roles` and `users.role`; backend/frontend references updated globally). No compatibility alias was added — single-cutover rename, verified via full test suite before deploy.
 
 ## Data/Domain Modules
 - Deals + details UI mapping.
@@ -30,9 +31,14 @@
   - Capture Content (`/capture-content`) with deck-ordered section-readiness summary.
   - Stakeholders (`/stakeholders`) with editable stakeholder `profile` capture.
   - Reports (`/reports`) with cross-deal decision-readiness baseline.
+  - Executive Readout (`/deals/:id/readout`) — read-only, deck-ordered walkthrough of a single deal's Step 2/3 context, in step-through or continuous-scroll mode, ending at the recorded (or pending) decision. Sourced entirely from existing deal/context endpoints; no new backend surface. Linked from the deal detail header.
+- Capture context sub-resources expanded: `deal_step2_checklist` (four yes/no + notes questions gating Step 2 qualification) and `deal_swb` (Strengths / Weaknesses / Benefits-to-customer, one row per deal, distinct from the SWOT tab).
+- `/health` now performs a real `SELECT 1` against the database and returns `503`/`degraded` on failure, replacing the prior no-op check that reported `ok` even with the DB down.
 
 ## Deployment/Config
 - Backend requires correct `DATABASE_URL` (pooler user, encoded password, SSL mode).
+- TLS to Supabase now verifies the certificate chain in production: `DB_SSL_CA` (PEM content, set directly in the Vercel env var — no filesystem read needed on serverless) plus `DB_SSL_REJECT_UNAUTHORIZED=true`. Resolution order in `database.js`: `DB_SSL_CA` env value → `DB_SSL_CA_PATH` file read (local dev) → unverified.
+- Supabase project auto-pauses on inactivity (observed on the free/low tier); first request after a pause returns a transient 503 ("Authentication service unavailable") while the project restores (~1-2 min). Not a code defect — no retry/backoff currently implemented in the client for this case.
 - Frontend API and socket config are env-driven (localhost fallbacks removed from production pathing).
 - API contract baseline now exposes explicit version metadata (`X-API-Version` header + `/api/meta` endpoint) for controlled evolution.
 - Core write endpoints now enforce lightweight request contract validation (`deals`, `partners`, `users`) via centralized middleware.

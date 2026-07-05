@@ -13,13 +13,14 @@
 - Deals list with filtering/sorting.
 - Deal detail with multi-tab data views.
 - Review decision save flow (Step 2/3).
-- Capture context editing and display.
+- Capture context editing and display, now 12 sections including Step 2 Qualifying Checklist and Strengths/Weaknesses/Why-Us (SWB).
 - Capture Content page with deck-ordered readiness view and direct context drilldown.
 - Risk/action linkage and management.
 - Stakeholders page with editable stakeholder profile capture.
 - Reports page with cross-deal readiness baseline.
 - Admin console + dedicated user administration.
 - Audit log review.
+- Executive Readout (`/deals/:id/readout`): read-only deck-ordered walkthrough per deal, step-through or scroll mode, ending at the recorded/pending decision.
 
 ## UX State
 - Readability/contrast improved in multiple pages.
@@ -32,6 +33,8 @@
 
 ## Highest UX Gaps
 1. Consistency of labels/microcopy/action confirmations.
-2. Formal gate-outcome UX (explicit gate decision states and rationale capture across Step 2/3).
+2. Formal gate-outcome UX (explicit gate decision states and rationale capture across Step 2/3) — partially addressed: Executive Readout now surfaces the recorded decision (or "No decision recorded") with outcome language at the end of each step's sections; the decision-entry UX itself is unchanged.
 3. Streamlining top workflow path (login -> capture content -> step review -> decision submit).
 4. Aligning visual hierarchy and spacing across high-traffic pages.
+5. VOC stakeholder selection is still free-text entry, not a picker against existing deal stakeholders.
+6. Partners tab does not yet expose teaming rationale or partner size/demography, though both are captured in the data model.
