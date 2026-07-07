@@ -40,6 +40,7 @@ This file reconciles the original feedback package with the current implementati
 | M7 | ESLint in CI | Open | Absent from `quality-gate.yml` | `Open` |
 | T3 | Coverage threshold | Open | Absent | `Open` |
 | D6 | `/health` DB connectivity check | Not tracked (found 2026-06-11) | **Closed 2026-06-13.** Endpoint now runs `SELECT 1` and returns `503`/`degraded` on failure instead of a no-op `ok` | `Closed` |
+| C4 | Supabase RLS disabled on all 41 tables + live `anon` key | Not tracked (found 2026-06-13) | **Closed 2026-06-13.** RLS enabled (default-deny, zero policies) on all 41 tables; advisor re-scan confirms `rls_enabled_no_policy` (informational) replacing `rls_disabled_in_public` (critical); `/health` confirmed `db: ok` post-fix | `Closed` |
 
 ---
 
