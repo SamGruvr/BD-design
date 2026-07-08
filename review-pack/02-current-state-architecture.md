@@ -17,7 +17,7 @@
 - Admin gating in frontend navigation and pages.
 - Bootstrap admin email parsing supported via backend env variables.
 - User admin supports create/edit/deactivate/delete/reset-password.
-- Auth routes now include configurable rate limiting for abuse resistance (`/login`, `/register`, `/forgot-password`, `/reset-password`).
+- Auth routes now include configurable rate limiting for abuse resistance (`/login`, `/register`, `/forgot-password`, `/reset-password`). Backed by a shared Postgres counter table (`rate_limit_counters`) rather than in-process memory, so counts are shared across concurrent Vercel serverless instances instead of resetting per-instance (H3, closed 2026-07-07).
 - Role taxonomy renamed: `analyst` → `standard_user` (migration `012_role_rename_standard_user.sql`, applied to `roles` and `users.role`; backend/frontend references updated globally). No compatibility alias was added — single-cutover rename, verified via full test suite before deploy.
 
 ## Data/Domain Modules

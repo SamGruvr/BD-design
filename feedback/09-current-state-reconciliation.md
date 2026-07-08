@@ -33,7 +33,7 @@ This file reconciles the original feedback package with the current implementati
 | SC2 | Pagination on `Deal.list()` | Not tracked | `list(filters, limit = 50, offset = 0)` with `LIMIT/OFFSET` in query | `Closed` |
 | C1 | TLS `rejectUnauthorized` | Open | **Closed 2026-06-11.** `DB_SSL_CA` env var support added (commit `a7d33d4`), Supabase CA cert + `DB_SSL_REJECT_UNAUTHORIZED=true` set in Vercel production, deployed and login-verified with strict TLS | `Closed` |
 | C2 | DDL-on-demand | Open (unlisted May 2) | `ensure*()` schema functions still present in `User.js`, `Role.js`, `AdminActionQueue.js`, `gateReadiness.js`, `UserRepository.js` | `Open` |
-| H3 | Distributed rate limiting | Open | Still in-memory `Map` in `rateLimit.js`; no Redis | `Open` |
+| H3 | Distributed rate limiting | Open | **Closed 2026-07-07.** Rewritten against Postgres (`rate_limit_counters`, migration 013) instead of Redis — avoids a new vendor, reuses the existing verified DB connection. 7 new unit tests; 119/119 total pass | `Closed` |
 | M4 | `gateReadiness.js` test coverage | Open | **Closed 2026-06-13.** 7 unit tests added (`backend/tests/unit/gateReadiness.test.js`) covering weighted scoring, minimum-section blocking, and tier boundaries. Tests documented rather than fixed two pre-existing quirks: empty sections score 100% (vacuous), and Step 3 weights sum to 110, not 100 | `Closed` |
 | M5 | Auth tests fragile handler extraction | Open | Still Express stack traversal; now selects last handler (less fragile, still internal-API dependent) | `Open` |
 | S1 | `npm audit` blocking in CI | Open | No audit step in `quality-gate.yml` at all | `Open` |
@@ -47,13 +47,12 @@ This file reconciles the original feedback package with the current implementati
 ## Reconciled Priority Order (Now)
 
 1. `C2` Replace DDL-on-demand with startup migrations
-2. `H3` Serverless-safe rate limiting (Redis-backed)
-3. `S1`/`M7`/`T3` CI hardening: blocking `npm audit`, ESLint, coverage threshold
-4. `M5` Rewrite auth route tests with `supertest`
-5. `M10` Normalize `gateReadiness.js` section weights (Step 3 sums to 110) and empty-section scoring semantics — new finding from `M4` test coverage, not yet fixed
-6. VOC stakeholder dropdown (sourced from deal stakeholders, "add new" path) — PRD §5.3.3 partial
-7. Surface `teaming_rationale` and partner size/demography in the Partners tab UI — data model/API ready, UI not updated
-8. `Phase 1.5` define-first deal-search execution (spec drafted, not implemented)
+2. `S1`/`M7`/`T3` CI hardening: blocking `npm audit`, ESLint, coverage threshold
+3. `M5` Rewrite auth route tests with `supertest`
+4. `M10` Normalize `gateReadiness.js` section weights (Step 3 sums to 110) and empty-section scoring semantics — new finding from `M4` test coverage, not yet fixed
+5. VOC stakeholder dropdown (sourced from deal stakeholders, "add new" path) — PRD §5.3.3 partial
+6. Surface `teaming_rationale` and partner size/demography in the Partners tab UI — data model/API ready, UI not updated
+7. `Phase 1.5` define-first deal-search execution (spec drafted, not implemented)
 
 ---
 

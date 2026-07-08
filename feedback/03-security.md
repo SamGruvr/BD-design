@@ -46,9 +46,17 @@
 
 ### H3 — Rate Limiter Bypassed in Serverless
 
-**File:** `backend/src/middleware/rateLimit.js`
-**Issue:** Rate limit state stored in `Map` in process memory. Vercel runs each function invocation in a separate process. State is not shared. Attacker triggers parallel invocations to bypass all rate limits entirely.
-**Fix:** See [08-codex-action-plan.md](08-codex-action-plan.md) item `H3`.
+**Status: Closed 2026-07-07.** Store rewritten to use Postgres (Supabase) instead of an in-memory `Map`. Chosen over Upstash Redis (the more commonly recommended pattern for this exact problem) specifically to avoid a new vendor/credential — the app already has a proven, TLS-verified Postgres connection, and rate-limit volume at this app's scale (auth-endpoint attempts, not page-view traffic) doesn't need Redis-level latency. See `review-pack/06-security-compliance-posture.md` for the trade-off writeup.
+
+**File (historical issue):** `backend/src/middleware/rateLimit.js`
+**Issue (historical):** Rate limit state stored in `Map` in process memory. Vercel runs each function invocation in a separate process. State is not shared. Attacker triggers parallel invocations to bypass all rate limits entirely.
+**Fix implemented:**
+- New table `rate_limit_counters` (migration `013_rate_limit_counters.sql`, applied to live Supabase), RLS enabled (default-deny) consistent with `C4`.
+- `backend/src/middleware/rateLimitStore.js`: atomic `INSERT ... ON CONFLICT` upsert against Postgres — single statement, no read-then-write race.
+- `backend/src/middleware/rateLimit.js`: added a `name` option so each of the 5 auth limiters (login-ip, login-credential, register, forgot-password, reset-password) gets its own namespaced key — without this, two limiters checking the same IP would share one counter in the new shared keyspace (they didn't collide before, since each had its own private `Map`).
+- Fails open on store error (logs and allows the request) rather than locking out all auth traffic during a DB hiccup.
+- Cleanup of expired rows piggybacks on live traffic (small random chance per request) rather than a timer — a `setInterval`-based cleanup, which the old code used, does not survive between Vercel invocations anyway, so this is also a correctness fix, not just a style change.
+- 7 new unit tests (`backend/tests/unit/rateLimit.test.js`) covering: under/over max, cross-limiter isolation, per-credential scoping, fail-open behavior, and window reset. Full suite (119 tests) passes.
 
 ### H5 — Bootstrap Admin Promotion: No Audit Trail
 
