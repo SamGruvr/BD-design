@@ -24,23 +24,17 @@ React 18 SPA with React Router v6. Context-based auth (`AuthContext`). Axios for
 
 ## Structural Flaws
 
-### CRITICAL — DDL on Every API Call
+### ~~CRITICAL — DDL on Every API Call~~ (RESOLVED 2026-07-10, migration 014)
 
-**Files affected:** `backend/src/models/User.js`, `backend/src/models/Deal.js`, `backend/src/models/AdminActionQueue.js`, `backend/src/services/gateReadiness.js`, `backend/src/repositories/DealRepository.js`
+**Original finding:** `ensure*()` helpers ran `CREATE TABLE IF NOT EXISTS` / `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` at request time, serializing DDL through the connection pool and risking PostgreSQL lock contention.
 
-**Pattern:**
-```js
-// Called at the top of every static model method
-await this.ensureProfileColumns();       // User.js — 4x ALTER TABLE per call
-await this.ensureBidPhaseColumn();       // Deal.js
-await this.ensureTable();                // AdminActionQueue.js
-await this.ensureReadinessSchema();      // gateReadiness.js
-await this.ensureDealUiDataTable();      // DealRepository.js
-```
+**Resolution (C2, closed 2026-07-10):**
+- The actual affected surface was larger than originally documented: 9 files, not 5. Removed from `User.js`, `UserRepository.js`, `Role.js`, `AdminActionQueue.js`, `auth.js` (2 call sites), `PartnerRepository.js` + `partners.js` (4 call sites), `dealContext.js` (12-table ensure function), `gateReadiness.js`.
+- All DDL consolidated into `database/migrations/014_consolidate_ddl_on_demand.sql` (applied live). Schema evolution is now migration-only; each cleaned file carries a comment pointing at migration 014.
+- The removal surfaced a real production bug: `PartnerRepository.ensureSchema()` ran the `legal_status` backfill UPDATE before dropping the old CHECK constraint, so the runtime migration had never once succeeded in production. Fixed in 014 with correct ordering (drop constraint, backfill, add new constraint); verified live, 6 legacy 'Pending' rows became 'NDA Pending'.
+- Second drift instance found: `gateReadiness.js` had independently redeclared narrower copies of `deal_customer_knowledge` and `deal_voice_of_customer`. Both removed; migration 014 is the single canonical definition.
 
-Each call issues `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` DDL. Under concurrent load this serializes DDL through the connection pool and causes PostgreSQL lock contention. Schema should be stable at runtime — DDL belongs in migrations, not hot paths.
-
-**Fix:** See [08-codex-action-plan.md](08-codex-action-plan.md) item `C2`.
+**Guardrail going forward:** never reintroduce runtime DDL in request paths.
 
 ---
 

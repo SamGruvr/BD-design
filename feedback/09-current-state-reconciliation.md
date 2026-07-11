@@ -1,7 +1,7 @@
 # Current-State Reconciliation (BD_ITA)
 
 **Validated against code repo:** `BD_ITA`
-**Validation date:** 2026-06-13
+**Validation date:** 2026-06-13 (C2/B1 rows updated 2026-07-10)
 **Reference commit:** `7833339` (POC completion plan A1-D6, live-verified on production)
 **Latest Phase 1 baseline tag:** `internal-preview-2026-05-01-r2`
 **Prior validation:** 2026-06-11 @ `7b4479f`
@@ -32,7 +32,8 @@ This file reconciles the original feedback package with the current implementati
 | S2–S5 | CI security gates | Open | `codeql.yml`, `gitleaks.yml`, `dependency-review.yml`, `dependabot.yml` all present in `.github/` | `Closed` |
 | SC2 | Pagination on `Deal.list()` | Not tracked | `list(filters, limit = 50, offset = 0)` with `LIMIT/OFFSET` in query | `Closed` |
 | C1 | TLS `rejectUnauthorized` | Open | **Closed 2026-06-11.** `DB_SSL_CA` env var support added (commit `a7d33d4`), Supabase CA cert + `DB_SSL_REJECT_UNAUTHORIZED=true` set in Vercel production, deployed and login-verified with strict TLS | `Closed` |
-| C2 | DDL-on-demand | Open (unlisted May 2) | `ensure*()` schema functions still present in `User.js`, `Role.js`, `AdminActionQueue.js`, `gateReadiness.js`, `UserRepository.js` | `Open` |
+| C2 | DDL-on-demand | Open (unlisted May 2) | **Closed 2026-07-10.** All `ensure*()` runtime DDL removed from 9 files (`User.js`, `UserRepository.js`, `Role.js`, `AdminActionQueue.js`, `auth.js`, `PartnerRepository.js`, `partners.js`, `dealContext.js`, `gateReadiness.js`); consolidated into migration `014_consolidate_ddl_on_demand.sql`, applied live. Uncovered and fixed a latent production bug: PartnerRepository ran the `legal_status` backfill UPDATE before dropping the old CHECK constraint, so that runtime migration had never succeeded in production (see B1 below) | `Closed` |
+| B1 | PartnerRepository constraint-order bug (found during C2) | Not tracked | **Closed 2026-07-10.** Runtime constraint swap ordered UPDATE before DROP CONSTRAINT; old CHECK (`Signed/Pending/Not Started`) rejected the new-taxonomy backfill on every execution. Fixed in migration 014 (drop, backfill, add); verified live via `pg_constraint`, 6 legacy 'Pending' rows became 'NDA Pending' | `Closed` |
 | H3 | Distributed rate limiting | Open | **Closed 2026-07-07.** Rewritten against Postgres (`rate_limit_counters`, migration 013) instead of Redis — avoids a new vendor, reuses the existing verified DB connection. 7 new unit tests; 119/119 total pass | `Closed` |
 | M4 | `gateReadiness.js` test coverage | Open | **Closed 2026-06-13.** 7 unit tests added (`backend/tests/unit/gateReadiness.test.js`) covering weighted scoring, minimum-section blocking, and tier boundaries. Tests documented rather than fixed two pre-existing quirks: empty sections score 100% (vacuous), and Step 3 weights sum to 110, not 100 | `Closed` |
 | M5 | Auth tests fragile handler extraction | Open | Still Express stack traversal; now selects last handler (less fragile, still internal-API dependent) | `Open` |
@@ -46,7 +47,7 @@ This file reconciles the original feedback package with the current implementati
 
 ## Reconciled Priority Order (Now)
 
-1. `C2` Replace DDL-on-demand with startup migrations
+1. ~~`C2` Replace DDL-on-demand with startup migrations~~ (Closed 2026-07-10, migration 014)
 2. `S1`/`M7`/`T3` CI hardening: blocking `npm audit`, ESLint, coverage threshold
 3. `M5` Rewrite auth route tests with `supertest`
 4. `M10` Normalize `gateReadiness.js` section weights (Step 3 sums to 110) and empty-section scoring semantics — new finding from `M4` test coverage, not yet fixed
